@@ -2,12 +2,10 @@
 
 ## Steps to run project
 
-git clone GIT_URL
-
-In the project directory, you need to run:
-
-1. npm install
-2. npm run start
+1. git clone GIT_URL
+2. In the project directory, you need to run:
+   1. npm install
+   2. npm run start
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -17,7 +15,7 @@ block route contains a black block inside the canvas which can be moved by using
 the action buttons, which is done without html canvas.
 Both the svgs are responsive.
 
-## list
+## List
 list route contains a list of items where an item can be added using a button.
 Every 3rd item in list is red in color.
 

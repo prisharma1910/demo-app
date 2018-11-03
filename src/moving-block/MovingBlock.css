@@ -1,0 +1,28 @@
+.float-left{
+    float: left;
+}
+
+.button-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.button-container > button {
+    font-size: inherit;
+    margin: 0.5rem;
+    padding: 0.5rem 2rem 0.5rem 2rem;
+    border-radius: 4px;
+}
+
+.forward-button{
+    background-color: lightgreen;
+    color: blue;
+}
+
+.backward-button{
+    background-color: lightskyblue;
+}
+
+@media (max-width : 370px) {
+    .float-left {float: none;}
+}

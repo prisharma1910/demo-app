@@ -1,0 +1,28 @@
+.list-h3{
+    margin-left: 1rem;
+}
+
+.add-button{
+    background-color: #6495f0;
+    border-radius: 4px;
+    font-size: inherit;
+    padding: 5px;
+}
+
+.add-button:disabled{
+    background-color: #cccccc;
+}
+
+.new-item{
+    margin-left: 1rem;
+}
+
+.new-item-input{
+    margin-right: 1rem;
+    border-radius: 2px;
+    font-size: inherit;
+}
+
+.list-items > li:nth-child(3n) {
+    color: red;
+}

@@ -1,0 +1,25 @@
+.grid{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #000;
+}
+
+.row{
+    background-color: wheat;
+}
+
+.col{
+    width: 25%;
+    float: left;
+    box-sizing: border-box;
+    text-align: center;
+    height: auto;
+}
+
+@media (max-width : 720px) {
+    .col {width: 50%;}
+}
+
+@media (max-width : 360px) {
+    .col {width: 100%;}
+}

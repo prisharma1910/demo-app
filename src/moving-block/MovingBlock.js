@@ -31,33 +31,33 @@ class MovingBlock extends React.Component {
         };
     }
 
-    updateInnerSvg = () => {
+    getBoxPosition = () => {
+        let boxCoordinates = { boxX: 0, boxY: 0 }; // position 1
         const { outerSquare, innerSquare } = this.getSvgRect();
 
-        let newx = null;
-        let newy = null;
-
         switch (this.state.position) {
-            case 1:
-            default:
-                newx = 0;
-                newy = 0;
-                break;
             case 2:
-                newx = outerSquare.right - innerSquare.width;
-                newy = 0;
+                boxCoordinates.boxX = outerSquare.width - innerSquare.width;
                 break;
             case 3:
-                newx = outerSquare.right - innerSquare.width;
-                newy = outerSquare.height - innerSquare.height;
+                boxCoordinates.boxX = outerSquare.width - innerSquare.width;
+                boxCoordinates.boxY = outerSquare.height - innerSquare.height;
                 break;
             case 4:
-                newx = 0;
-                newy = outerSquare.height - innerSquare.height;
+                boxCoordinates.boxY = outerSquare.height - innerSquare.height;
+                break;
+            default:
+                boxCoordinates.boxX = 0;
+                boxCoordinates.boxY = 0;
         }
+        return boxCoordinates;
+    }
 
-        this.innerSquare.setAttribute('x', newx);
-        this.innerSquare.setAttribute('y', newy);
+    updateInnerSvg = () => {
+        const { boxX, boxY } = this.getBoxPosition();
+
+        this.innerSquare.setAttribute('x', boxX);
+        this.innerSquare.setAttribute('y', boxY);
     }
 
     moveForward = () => {
@@ -80,28 +80,6 @@ class MovingBlock extends React.Component {
         this.setState({
             position: newPosition
         })
-    }
-
-    getBoxPosition = () => {
-        let boxCoordinates = { boxX: 0, boxY: 0 }; // position 1
-        const { outerSquare, innerSquare } = this.getSvgRect();
-
-        switch (this.state.position) {
-            case 2:
-                boxCoordinates.boxX = outerSquare.width - innerSquare.width;
-                break;
-            case 3:
-                boxCoordinates.boxX = outerSquare.width - innerSquare.width;
-                boxCoordinates.boxY = outerSquare.height - innerSquare.height;
-                break;
-            case 4:
-                boxCoordinates.boxY = outerSquare.height - innerSquare.height;
-                break;
-            default:
-                boxCoordinates.boxX = 0;
-                boxCoordinates.boxY = 0;
-        }
-        return boxCoordinates;
     }
 
     render() {

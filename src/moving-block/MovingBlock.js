@@ -5,16 +5,21 @@ class MovingBlock extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            position: 1
+            position: 1,
+            color: '#000',
             //1 - top left
             //2 - top right
             //3 - bottom left
             //4 - bottom right
+            blockingBlock: {position: 1, boxCoordinates: {blockedX: 0, blockedY: 0}}
         }
     }
 
     componentDidMount = () => {
         window.addEventListener("resize", this.updateInnerSvg);
+        this.setState({
+            blockingBlock: {...this.state.blockingBlock, boxCoordinates: this.getBlockerBoxPosition()}
+        })
     }
 
     componentWillUnmount = () => {
@@ -23,11 +28,12 @@ class MovingBlock extends React.Component {
 
     getSvgRect = () => {
         if (!this.outerSquare) {
-            return { outerSquare: {}, innerSquare: {} };
+            return { outerSquare: {}, innerSquare: {}, blockerSquare: {} };
         }
         return {
             outerSquare: this.outerSquare.getBoundingClientRect(),
-            innerSquare: this.innerSquare.getBoundingClientRect()
+            innerSquare: this.innerSquare.getBoundingClientRect(),
+            blockerSquare: this.blockerSquare.getBoundingClientRect()
         };
     }
 
@@ -55,35 +61,79 @@ class MovingBlock extends React.Component {
 
     updateInnerSvg = () => {
         const { boxX, boxY } = this.getBoxPosition();
+        const blockingBoxCoordinates = this.getBlockerBoxPosition();
 
         this.innerSquare.setAttribute('x', boxX);
         this.innerSquare.setAttribute('y', boxY);
+        this.setState({
+            blockingBlock: {...this.state.blockingBlock, boxCoordinates: blockingBoxCoordinates}
+        })
     }
 
     moveForward = () => {
-        let currentPosition = this.state.position;
+        let {position: currentPosition, blockingBlock, color: newColor} = this.state;
+        const blockedPosition = blockingBlock.position;
         let newPosition = currentPosition + 1;
+        newColor = '#000';
         if (currentPosition === 4) {
             newPosition = 1;
         }
+        if(newPosition === blockedPosition){
+            newPosition = currentPosition;
+            newColor = '#FF0000';
+        }
         this.setState({
-            position: newPosition
+            position: newPosition,
+            color: newColor
         })
     }
 
     moveBackward = () => {
-        let currentPosition = this.state.position;
+        let {position: currentPosition, blockingBlock, color: newColor} = this.state;
+        const blockedPosition = blockingBlock.position;   
         let newPosition = currentPosition - 1;
+        newColor = '#000';
         if (currentPosition === 1) {
             newPosition = 4;
         }
+        if(newPosition === blockedPosition){
+            newPosition = currentPosition;
+            newColor = '#FF0000';
+        }
         this.setState({
-            position: newPosition
+            position: newPosition,
+            color: newColor
         })
     }
 
+    getBlockerBoxPosition = () => {
+        let boxCoordinates = { blockedX: 0, blockedY: 0 }; // position 1
+        const { outerSquare, blockerSquare } = this.getSvgRect();
+        if(!outerSquare.height){
+            return boxCoordinates;
+        }
+        switch (this.state.blockingBlock.position) {
+            case 2:
+                boxCoordinates.blockedX = outerSquare.width - blockerSquare.width;
+                break;
+            case 3:
+                boxCoordinates.blockedX = outerSquare.width - blockerSquare.width;
+                boxCoordinates.blockedY = outerSquare.height - blockerSquare.height;
+                break;
+            case 4:
+                boxCoordinates.blockedY = outerSquare.height - blockerSquare.height;
+                break;
+            default:
+                boxCoordinates.blockedX = 0;
+                boxCoordinates.blockedY = 0;
+        }
+        return boxCoordinates;
+    }
+
+
     render() {
         const { boxX, boxY } = this.getBoxPosition();
+        const {blockedX, blockedY} = this.state.blockingBlock.boxCoordinates;
         return (<React.Fragment>
             <h2> Block </h2>
             <div className="float-left">
@@ -91,7 +141,9 @@ class MovingBlock extends React.Component {
                     <rect width="100%" height="100%" ref={(ref) => { this.outerSquare = ref; }}
                         style={{ fill: '#fff', strokeWidth: 3, stroke: '#006400' }} />
                     <rect x={boxX} y={boxY} width="100" height="100" ref={(ref) => { this.innerSquare = ref; }}
-                        style={{ fill: '#000' }} />
+                        style={{ fill: this.state.color }} />
+                    <rect x={blockedX} y={blockedY} width="50" height="50" ref={(ref) => { this.blockerSquare = ref; }}
+                        style={{ fill: '#FFC0CB' }} />
                 </svg>
             </div>
             <div className="float-left button-container">
